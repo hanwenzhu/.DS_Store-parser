@@ -6,6 +6,12 @@ things like modification dates, icons, backgrounds, comments, etc.  Each field
 has a four-char name and variable length and type data.  Each file has a number
 of unique fields.  See the second link below for the meaning of each field.
 
+## Usage
+```sh
+python3 parse.py <.DS_Store file>
+```
+
+## More about .DS_Stores
 Since .DS_Store formats are proprietary, there aren't official specifications
 and current parsers and formats are more or less speculations.
 
