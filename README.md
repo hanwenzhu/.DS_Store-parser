@@ -13,7 +13,6 @@ python3 parse.py <.DS_Store file>
 ```
 
 ## More about .DS_Stores
-
 Since .DS_Store formats are proprietary, there aren't official specifications
 and current parsers and formats are more or less speculations.
 
