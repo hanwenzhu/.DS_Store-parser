@@ -8,11 +8,17 @@ has a four-char name and variable length and type data.  Each file has a number
 of unique fields.  See the second link below for the meaning of each field.
 
 ## Usage
+To list all the files and their properties:
 ```sh
 python3 parse.py <.DS_Store file>
 ```
 
+If you want more specific usages, see the functions of the `DSStore` class.
+
 ## More about .DS_Stores
+It's the file that every macOS developer knows (and hates) and any other person
+doesn't know.  It can and has led to serious, juicy data breaches.
+
 Since .DS_Store formats are proprietary, there aren't official specifications
 and current parsers and formats are more or less speculations.
 
@@ -20,10 +26,11 @@ It's worth saying that a large portion of the .DS_Store appears to be junk.
 Maybe the OS writes to the places that are convenient and doesn't care about
 .DS_Store sizes.
 
-Below are some helpful links for .DS_Store.  I used some of them.
+Below are some helpful links for .DS_Store.  I used some of them.  They are all
+a little out of date for the current macOS version, though.
 - Nice intro:
 https://0day.work/parsing-the-ds_store-file-format/
-- Very detailed, but a little out of date for the current macOS version:
+- Very detailed:
 https://metacpan.org/pod/distribution/Mac-Finder-DSStore/DSStoreFormat.pod
-- Original, but a little out of date for the current macOS version:
+- Original:
 https://wiki.mozilla.org/DS_Store_File_Format
