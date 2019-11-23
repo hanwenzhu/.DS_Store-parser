@@ -22,6 +22,7 @@ https://metacpan.org/pod/distribution/Mac-Finder-DSStore/DSStoreFormat.pod
 https://wiki.mozilla.org/DS_Store_File_Format
 """
 
+import sys
 import warnings
 
 
@@ -219,7 +220,16 @@ class DSStore:
 
 
 if __name__ == '__main__':
-    with open('.DS_Store', 'rb') as file:
+    if len(sys.argv) == 2:
+        filename = sys.argv[1]
+    elif len(sys.argv) == 1:
+        print(f'File unspecified. Use python3 {sys.argv[0]} <.DS_Store file>'
+              ' to specify file. Defaulting to .DS_Store in the current'
+              ' directory...')
+        filename = '.DS_Store'
+    else:
+        print(f'Usage: python3 {sys.argv[0]} <.DS_Store file>')
+    with open(filename, 'rb') as file:
         content = file.read()
     ds_store = DSStore(content)
     for record in ds_store.records:
