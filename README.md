@@ -7,9 +7,11 @@ things like modification dates, icons, backgrounds, comments, etc.  This
 program parses, displays, and explains all the fields currently known in
 .DS_Store.  (There's a lot!)
 
-This program extracts more data than other similar programs like [gehaxelt /
-**Python-dsstore**](https://github.com/gehaxelt/Python-dsstore) that I can
-find.
+This program extracts more data than other similar programs that I can find,
+like [gehaxelt /
+**Python-dsstore**](https://github.com/gehaxelt/Python-dsstore) or [al45tair /
+**ds_store**](https://github.com/al45tair/ds_store), although the latter
+provides the function of writing .DS_Stores (which I am working on).
 
 ## Usage
 To list all the files and their properties:
@@ -26,6 +28,15 @@ desktop, etc.
 ## More about .DS_Stores
 It's the file that every macOS developer knows (and hates) and any other person
 doesn't know.  It can and has led to serious, juicy data breaches.
+
+[All Things
+Dork](www.allthingsdork.com/random/2007/07/11/those-pesky-ds_store-files/)
+describes it as:
+> . . . Finder hides this file, so Mac Users are typically oblivious to it.
+> But when you start working in a networked environment with Windows or Linux
+> users you'll soon here [*sic.*] people screaming "WTF are all these .DS_Store
+> files". Yes, our beloved OS X runs around like a hamster, ~~shitting~~
+> .DS_Store files all over the network in any folder we go to . . .
 
 Since .DS_Store formats are proprietary, there aren't official specifications
 and current parsers and formats are more or less speculations.

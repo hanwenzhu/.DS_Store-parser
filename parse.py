@@ -1,3 +1,10 @@
+# MIT License
+# Copyright (c) 2019 Thomas Zhu
+
+# TODO: Support older versions of Python by not using f-strings
+# TODO: Support writing to .DS_Stores
+# TODO: Documentation
+
 import plistlib
 import sys
 import warnings
@@ -7,12 +14,12 @@ with open('README.md') as readme:
     __doc__ = readme.read()
 
 
-# The Python types I use for the different .DS_Store types:
+# The Python types used for the different .DS_Store types:
 # 'bool': bool
 # 'shor': int
 # 'long': int
 # 'comp': int
-# 'dutc': bytes  # TODO
+# 'dutc': int
 # 'type': str (of length 4)
 # 'blob': bytes
 # 'ustr': str
@@ -114,7 +121,7 @@ class Record:
                 y = int.from_bytes(data[4:8], 'big', signed=False)
                 # Don't know what data[8:16] is for, but it's variable
                 rest = data[8:16]
-                yield f'Icon location: x {x}, y {y}, {show_one(rest)}'
+                yield f'Icon location: x {x}px, y {y}px, {show_one(rest)}'
             elif field == 'LSVO':
                 self.validate_type(field, data, bool)
                 yield f'{field} (unknown): {data}'
@@ -254,7 +261,7 @@ class Record:
             # following 2 may appear at the same time, but difference unknown
             elif field == 'moDD':
                 # TODO: date
-                self.validate_type(field, data, bytes)
+                self.validate_type(field, data, (int, bytes))
                 yield ('Modification date (timestamp, format unknown):'
                        f' {show_one(data)}')
             elif field == 'modD':
@@ -296,6 +303,9 @@ class DSStore:
         self.content = content
         self.records = []
         self.parse()
+
+    def read(self):
+        return self.records
 
     def next_byte(self):
         data = content[self.cursor]
@@ -375,8 +385,6 @@ class DSStore:
         # The master node points to the root node and contains metadata
         # The B-tree contains nodes, which contain records of file properties
         # or nodes
-        if node_id == 0:  # TODO
-            return
         if node_id is None:
             master = True
             node_id = self.master_id
@@ -420,10 +428,7 @@ class DSStore:
                 else:
                     self.records.append(Record(name, {field: data}))
 
-            # TODO
             if next_id:
-                self.parse_tree(node_id=next_id)
-            else:
                 self.parse_tree(node_id=next_id)
 
     def parse_data(self):
@@ -461,14 +466,14 @@ if __name__ == '__main__':
     elif len(sys.argv) == 1:
         print(f'File unspecified. Use python3 {sys.argv[0]} <.DS_Store file>'
               ' to specify file. Defaulting to .DS_Store in the current'
-              ' directory...')
+              ' directory...', file=sys.stderr)
         filename = '.DS_Store'
     else:
         print(f'Usage: python3 {sys.argv[0]} <.DS_Store file>')
     with open(filename, 'rb') as file:
         content = file.read()
     ds_store = DSStore(content)
-    for record in ds_store.records:
+    for record in ds_store.read():
         print(record.name)
         for description in record.human_readable():
             print(f'\t{description}')
