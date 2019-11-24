@@ -30,13 +30,13 @@ It's the file that every macOS developer knows (and hates) and any other person
 doesn't know.  It can and has led to serious, juicy data breaches.
 
 [All Things
-Dork](www.allthingsdork.com/random/2007/07/11/those-pesky-ds_store-files/)
+Dork](http://www.allthingsdork.com/random/2007/07/11/those-pesky-ds_store-files/)
 describes it as:
 > . . . Finder hides this file, so Mac Users are typically oblivious to it.
 > But when you start working in a networked environment with Windows or Linux
 > users you'll soon here [*sic.*] people screaming "WTF are all these .DS_Store
-> files". Yes, our beloved OS X runs around like a hamster, ~~shitting~~
-> .DS_Store files all over the network in any folder we go to . . .
+> files". Yes, our beloved OS X runs around like a hamster, shitting .DS_Store
+> files all over the network in any folder we go to . . .
 
 Since .DS_Store formats are proprietary, there aren't official specifications
 and current parsers and formats are more or less speculations.
