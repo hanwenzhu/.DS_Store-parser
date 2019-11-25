@@ -4,7 +4,9 @@
 # TODO: Support older versions of Python by not using f-strings
 # TODO: Support writing to .DS_Stores
 # TODO: Documentation
+# TODO: macOS alias
 
+import datetime
 import plistlib
 import sys
 import warnings
@@ -25,6 +27,13 @@ with open('README.md') as readme:
 # 'ustr': str
 
 
+def show_date(timestamp):
+    date = (datetime.datetime.fromtimestamp(timestamp)
+            - datetime.datetime.fromtimestamp(0)
+            + datetime.datetime(1904, 1, 1))
+    return date.strftime('%B %-d, %Y at %-I:%M %p')
+
+
 def show_bytes(data):
     if data.startswith(b'bplist') and data[6:8].isdecimal():
         return show(plistlib.loads(data))
@@ -32,8 +41,8 @@ def show_bytes(data):
         # TODO
         return f'(in macOS alias type, unparsed) {data!r}'
     elif data.startswith(b'Bud1'):
-        return show('\n'.join(DSStore(b'\x00\x00\x00\x01' +
-                                      data).human_readable()))
+        return show('\n'.join(DSStore(b'\x00\x00\x00\x01'
+                                      + data).human_readable()))
     else:
         return f'0x{data.hex()}'
 
@@ -258,17 +267,30 @@ class Record:
                 # lsvt supplanted by lsvp / lsvP
                 self.validate_type(field, data, int)
                 yield f'List view text size: {data}pt'
-            # following 2 may appear at the same time, but difference unknown
+            # Following 2 may appear at the same time, but difference unknown
+            # They were originally dutc, but now they use blob
+            # When dutc, it's the number of 1 / 65536 seconds from 1904
+            # Otherwise, it's TODO
             elif field == 'moDD':
-                # TODO: date
                 self.validate_type(field, data, (int, bytes))
-                yield ('Modification date (timestamp, format unknown):'
-                       f' {show_one(data)}')
+                if isinstance(data, int):
+                    date = data / 65536
+                    yield f'Modification date: {show_date(date)}'
+                elif isinstance(data, bytes):
+                    # Little endian for some reason
+                    date = int.from_bytes(data, 'little')
+                    yield ('Modification date (timestamp, format unknown:'
+                           f' {date}')
             elif field == 'modD':
-                # TODO: date
-                self.validate_type(field, data, bytes)
-                yield ('Modification date, alternative (timestamp, format'
-                       f' unknown): {show_one(data)}')
+                self.validate_type(field, data, (int, bytes))
+                if isinstance(data, int):
+                    date = data / 65536
+                    yield f'Modification date, alternative: {show_date(date)}'
+                elif isinstance(data, bytes):
+                    # Little endian for some reason
+                    date = int.from_bytes(data, 'little')
+                    yield ('Modification date, alternative (timestamp, format'
+                           f' unknown): {date}')
             elif field in {'ph1S', 'phyS'}:
                 # phyS supplanted by ph1S for unknown reasons
                 self.validate_type(field, data, int)
@@ -292,8 +314,7 @@ class Record:
                 view = views.get(data, f'(unrecognized) {data}')
                 yield f'View style: {view}'
             else:
-                warnings.warn(f'Unrecognized field {field}')
-                yield f'{field}: {data!r}'
+                yield f'{field} (unrecognized): {data!r}'
 
 
 class DSStore:
@@ -441,7 +462,6 @@ class DSStore:
         elif data_type == 'comp':
             return self.next_uint64()
         elif data_type == 'dutc':
-            # TODO: this is the number of 1/65536 intervals from 1904
             return self.next_uint64()
         elif data_type == 'type':
             return self.next_bytes(4).decode('ascii')
