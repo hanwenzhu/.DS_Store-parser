@@ -41,7 +41,7 @@ describes it as:
 Since .DS_Store formats are proprietary, there aren't official specifications
 and current parsers and formats are more or less speculations.
 
-It's worth saying that a large portion of the .DS_Store appears to be junk.
+It's worth noting that a large portion of the .DS_Store appears to be junk.
 Maybe the OS writes to the places that are convenient and doesn't care about
 .DS_Store sizes.
 
